@@ -1,12 +1,14 @@
 #-----------------------------------------------------------------------------
 #Modulo 2: Identificacion de SNP. Programa "BSA_SNP"
 #-----------------------------------------------------------------------------
-#La funcion BSA_SNP
-#El archivo o data frame de entrada debe tener, como minimo, los siguientes datos:
+#La funcion BSA_SNP analiza el data-frame vcf_df buscando mutaciones que creen
+#o rompan un codón de parada o inicio en uno de los 3 posibles marcos de lecturas
+#a partir de la secuencia extraída del genome_fasta
+#El data frame de entrada debe tener, como minimo, los siguientes datos:
 # - Region: Cromosoma [CHROM] y posicion [POS]
-# - Lectura de referencia [REF] y alternativa [ALT] para ambos pools o los valores Delta SNP
 #-----------------------------------------------------------------------------
-#La funcion devuelve
+#La funcion devuelve un data-frame con 8 columnas que indican si se ha producido
+#alguno de los 4 posibles casos de relevancia en uno u otra direccion.
 #-----------------------------------------------------------------------------
 BSA_SNP <- function(vcf_df,
                      genome_fasta,
