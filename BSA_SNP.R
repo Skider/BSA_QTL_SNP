@@ -88,8 +88,7 @@ BSA_SNP <- function(vcf_df,
     POS_Start <- Posicion - Intervalo
     POS_End <- Posicion + Intervalo
     vcf_df_chr <- subset(vcf_df_chr, POS >= POS_Start & POS <= POS_End)
-  }
-  if(type == "Rango"){
+  } else if(type == "Rango"){
     vcf_df_chr <- subset(vcf_df_chr, POS >= POS_Start & POS <= POS_End)
   }
   
