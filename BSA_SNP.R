@@ -15,7 +15,7 @@ BSA_SNP <- function(vcf_df,
                      chr_list = "CHROM",
                      type = "Rango",
                      POS_Start = 1, POS_End = 1000000,
-                     Posicion = 1000000, Intervalo = 500000,
+                     position = 1000000, range = 500000,
                      filter_type = "ge",
                      f_DeltaSNP_1 = 0.75, f_DeltaSNP_2 = -0.75,
                      filter = TRUE
@@ -30,7 +30,7 @@ BSA_SNP <- function(vcf_df,
   #   type: Completo: Todo el cromosoma. Eleccion por defecto.
   #         Rango: Rango fijado entre POS_Start y POS_End. Por defecto entre 1-1.000.000
   #         Punto: Rango en un Intervalo a la derecha y a la izquierda de Posicion.
-  #                 Por defecto en la posicion 1.000.000 con un rango de mas-menos 500.000
+  #                 Por defecto en la position 1.000.000 con un range de mas-menos 500.000
   #filter_type: Eleccion del filtro de Delta_SNPIndex a realizar.
   #   Opciones: gt (Mayor que), ge (Mayor o igual)
   #             lt (Menor que), le (Menor o igual)
@@ -64,7 +64,7 @@ BSA_SNP <- function(vcf_df,
   #se lee un archivo fasta con el nombre y la ruta indicada
   if(class(genome_fasta) == "character"){
     cat(sprintf("Leyendo el genoma de referencia...\n"))
-    genome_fasta <- read.fasta(seqinr::genome_fasta,seqtype = "DNA")
+    genome_fasta <- seqinr::read.fasta(genome_fasta,seqtype = "DNA")
   } else if(class(genome_fasta) != "list") {
     stop("Introduzca un genoma valido o indica la ruta del archivo FASTA.")
   }
@@ -81,7 +81,7 @@ BSA_SNP <- function(vcf_df,
   }
   
   #Creacion del data frame solo con los cromosomas escogidos: vcf_df_chr y solo las mutaciones SNP
-  cat(sprintf("Filtrando los SNP de la region de interes...\n"))
+  cat(sprintf("Filtrando los SNP de las regiones de interes...\n"))
   vcf_df_chr <- subset(vcf_df, CHROM %in% chr_list & VARIANT == "SNP")
   #Creacion del data frame para regiones especificas
   if(type == "Punto"){
