@@ -105,8 +105,7 @@ BSA_SNP_Gene <- function(vcf_df,
     POS_End <- Posicion + Intervalo
     vcf_df_chr <- subset(vcf_df_chr, POS >= POS_Start & POS <= POS_End)
     bed_df_chr <- subset(bed_df_chr, Initial_POS >= POS_Start & Final_POS <= POS_End)
-  }
-  if(type == "Rango"){
+  } else if(type == "Rango"){
     vcf_df_chr <- subset(vcf_df_chr, POS >= POS_Start & POS <= POS_End)
     bed_df_chr <- subset(bed_df_chr, Initial_POS >= POS_Start & Final_POS <= POS_End)
   }
@@ -133,8 +132,11 @@ BSA_SNP_Gene <- function(vcf_df,
       vcf_df_chr$Dir[1] <- bed_df_tmp$Dir[j]
       start_count <- j
       break
-    }
+    }# else if (as.integer(vcf_df_chr$POS[1]) > as.integer(bed_df_tmp$Final_POS[j])){
+    #  break
+    #}
   }
+  i <- 8
   for (i in 2:nrow(vcf_df_chr)){
     if(i == as.integer(check_pc * nrow(vcf_df_chr) * 0.1)){
       cat(sprintf("Analizado el %d%% de los SNP\n",check_pc*10))
@@ -143,7 +145,7 @@ BSA_SNP_Gene <- function(vcf_df,
     #Si se cambia de region, se reinicia el contador "start_count" y se genera
     #un nuevo bed_df con la region
     if(vcf_df_chr$CHROM[i] != vcf_df_chr$CHROM[i-1] | empty_region == 1){
-      bed_df_tmp <- subset(bed_df_chr, Region == vcf_df_chr$CHROM[1])
+      bed_df_tmp <- subset(bed_df_chr, Region == vcf_df_chr$CHROM[i])
       #Comprobacion de que hay genes en la region analizada
       if(nrow(bed_df_tmp) == 0){
         empty_region <- 1
@@ -161,9 +163,9 @@ BSA_SNP_Gene <- function(vcf_df,
         vcf_df_chr$Dir[i] <- bed_df_tmp$Dir[j]
         start_count <- j
         break
-      } else if (vcf_df_chr$POS[i] > bed_df_tmp$Final_POS[j]){
-        next
-      }
+      }# else if (as.integer(vcf_df_chr$POS[i]) > as.integer(bed_df_tmp$Final_POS[j])){
+      #  break
+      #}
     }
   }
   
