@@ -41,24 +41,22 @@ BSA_SNP_Gene_2 <- function(vcf_df,
   library(dplyr)
   
   #Comprobacion de si la mutacion esta dentro del ARNm del gen
-  seq_Previa_SNP_tmp <- ""
-  seq_Post_SNP_tmp <- ""
   check_pc <- 1
-  for (i in 1:nrow(vcf_df_chr)){
+  for (i in 1:nrow(vcf_df)){
     #Saltarse las mutaciones sin gen asignado
-    if(vcf_df_chr$Gene[i] == ""){
+    if(vcf_df$Gene[i] == ""){
       next
     }
-    if(i == as.integer(check_pc * nrow(vcf_df_chr) * 0.1)){
+    if(i == as.integer(check_pc * nrow(vcf_df) * 0.1)){
       cat(sprintf("Analizado el %d%% de los SNP\n",check_pc*10))
       check_pc <- check_pc + 1
     }
     #Obtencion de la secuencia previo y posterior a la mutacion (20 pares de base)
-    POS_SNP_tmp <- as.integer(vcf_df_chr$POS[i])
+    POS_SNP_tmp <- as.integer(vcf_df$POS[i])
     
-    seq_Previa_SNP_tmp <- tolower(paste(genome_fasta["name" = vcf_df_chr$CHROM[i]][[1]][(POS_SNP_tmp-check_seq_pb):(POS_SNP_tmp)],collapse=""))
-    seq_Post_SNP_tmp <- tolower(paste(genome_fasta["name" = vcf_df_chr$CHROM[i]][[1]][(POS_SNP_tmp):(POS_SNP_tmp+check_seq_pb)],collapse=""))
-    ARNm_tmp <- tolower(paste(rna_fasta["name" = vcf_df_chr$Gene[i]][[1]],collapse=""))
+    seq_Previa_SNP_tmp <- tolower(paste(genome_fasta["name" = vcf_df$CHROM[i]][[1]][(POS_SNP_tmp-check_seq_pb):(POS_SNP_tmp)],collapse=""))
+    seq_Post_SNP_tmp <- tolower(paste(genome_fasta["name" = vcf_df$CHROM[i]][[1]][(POS_SNP_tmp):(POS_SNP_tmp+check_seq_pb)],collapse=""))
+    ARNm_tmp <- tolower(paste(rna_fasta["name" = vcf_df$Gene[i]][[1]],collapse=""))
     
     #Busca la secuencia anterior y posterior a la mutacion en ambos sentidos del ARNm
     check_Gene <- c(0,0,0,0) #Previa_SNP_+;Post_SNP_+;Previa_SNP_-;Post_SNP_-
@@ -78,27 +76,27 @@ BSA_SNP_Gene_2 <- function(vcf_df,
     #Si se ha obtenido coincidencia en la direccion positiva
     if(paste(check_Gene,collapse="") == "1100"){
       #y coincide con la direccion del gen
-      if(vcf_df_chr$Dir[i] == "+"){
-        vcf_df_chr$Check_Gene[i] <- 1
+      if(vcf_df$Dir[i] == "+"){
+        vcf_df$Check_Gene[i] <- 1
       } else {
-        vcf_df_chr$Check_Gene[i] <- "?"
+        vcf_df$Check_Gene[i] <- "?"
       }
     #Si se ha obtenido coincidencia en la direccion negativa
     } else if(paste(check_Gene,collapse="") == "0011"){
       #y coincide con la direccion del gen
-      if(vcf_df_chr$Dir[i] == "-"){
-        vcf_df_chr$Check_Gene[i] <- 1
+      if(vcf_df$Dir[i] == "-"){
+        vcf_df$Check_Gene[i] <- 1
       } else {
-        vcf_df_chr$Check_Gene[i] <- "?"
+        vcf_df$Check_Gene[i] <- "?"
       }
     #Si no se ha obtenido ninguna coincidencia
     } else if(paste(check_Gene,collapse="") == "0000"){
-      vcf_df_chr$Check_Gene[i] <- 0
+      vcf_df$Check_Gene[i] <- 0
     #Casos no completados anteriormente
     } else {
-      vcf_df_chr$Check_Gene[i] <- "?"
+      vcf_df$Check_Gene[i] <- "?"
     }
   }
   
-  return(vcf_df_chr)
+  return(vcf_df)
 }
