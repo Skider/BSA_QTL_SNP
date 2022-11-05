@@ -115,7 +115,7 @@ BSA_SNP <- function(vcf_df,
   } else if(filter_type == "between"){
     vcf_df_chr <- subset(vcf_df_chr, Delta_SNPIndex <= f_DeltaSNP_1 & Delta_SNPIndex >= f_DeltaSNP_2)
   } else if(filter_type == "out"){
-    vcf_df_chr <- subset(vcf_df_chr, Delta_SNPIndex > f_DeltaSNP_1 & Delta_SNPIndex < f_DeltaSNP_2)
+    vcf_df_chr <- subset(vcf_df_chr, Delta_SNPIndex > f_DeltaSNP_1 | Delta_SNPIndex < f_DeltaSNP_2)
   } else{
     stop("Escoja un filtro de DeltaSNP valido.")
   }
